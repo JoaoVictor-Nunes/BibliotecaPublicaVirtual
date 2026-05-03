@@ -1,6 +1,6 @@
 package br.edu.christus.bibliotecapublicavirtual.service;
 
-import br.edu.christus.bibliotecapublicavirtual.domain.model.Aluno;
+import br.edu.christus.bibliotecapublicavirtual.domain.dto.ProfessorDTO;
 import br.edu.christus.bibliotecapublicavirtual.domain.model.Professor;
 import br.edu.christus.bibliotecapublicavirtual.repository.ProfessorRepository;
 import br.edu.christus.bibliotecapublicavirtual.utils.MapperUtil;
@@ -10,32 +10,40 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProfessorService {
     @Autowired
     private ProfessorRepository repository;
 
-    public Professor save(Professor professor) {
-        if (professor.getName().length() > 255) {
+    public ProfessorDTO save(ProfessorDTO professorDTO) {
+        if (professorDTO.getName().length() > 255) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Nome do professor não pode ter mais que 255 caracteres.");
         }
 
-        return repository.save(MapperUtil.parseObject(professor, Professor.class));
+        Optional<Professor> existingByEmail = repository.findByEmail(professorDTO.getEmail());
+        if (existingByEmail.isPresent() && (professorDTO.getId() == null || !existingByEmail.get().getId().equals(professorDTO.getId()))) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este email já está sendo utilizado.");
+        }
+
+        Professor professorToSave = MapperUtil.parseObject(professorDTO, Professor.class);
+        Professor savedProfessor = repository.save(professorToSave);
+        return MapperUtil.parseObject(savedProfessor, ProfessorDTO.class);
     }
 
-    public List<Professor> findAll() {
-        return repository.findAll();
+    public List<ProfessorDTO> findAll() {
+        return MapperUtil.parseListObjects(repository.findAll(), ProfessorDTO.class);
     }
 
-    public Professor findById(Long id) {
+    public ProfessorDTO findById(Long id) {
         var professor = repository.findById(id);
-        if (professor == null) {
+        if (professor.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "O professor não existe.");
         }
-        return MapperUtil.parseObject(professor.get(), Professor.class);
+        return MapperUtil.parseObject(professor.get(), ProfessorDTO.class);
     }
 
     public void delete(Long id) {

@@ -1,6 +1,6 @@
 package br.edu.christus.bibliotecapublicavirtual.controller;
 
-import br.edu.christus.bibliotecapublicavirtual.domain.model.Professor;
+import br.edu.christus.bibliotecapublicavirtual.domain.dto.ProfessorDTO;
 import br.edu.christus.bibliotecapublicavirtual.service.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -8,32 +8,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/professor")
 public class ProfessorController {
     @Autowired
     private ProfessorService service;
 
     @PostMapping
-    public Professor create(@RequestBody Professor professor) {
-        return service.save(professor);
+    public ProfessorDTO create(@RequestBody ProfessorDTO professorDTO) {
+        return service.save(professorDTO);
     }
 
     @PutMapping
-    public Professor update(@RequestBody Professor professor) {
-        return service.save(professor);
+    public ProfessorDTO update(@RequestBody ProfessorDTO professorDTO) {
+        return service.save(professorDTO);
     }
 
     @GetMapping
-    public List<Professor> findAll() {
+    public List<ProfessorDTO> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Professor findById(@PathVariable Long id) {
+    public ProfessorDTO findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }

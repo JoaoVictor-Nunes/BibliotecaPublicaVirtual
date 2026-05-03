@@ -1,6 +1,6 @@
 package br.edu.christus.bibliotecapublicavirtual.controller;
 
-import br.edu.christus.bibliotecapublicavirtual.domain.model.Aluno;
+import br.edu.christus.bibliotecapublicavirtual.domain.dto.AlunoDTO;
 import br.edu.christus.bibliotecapublicavirtual.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,22 +14,22 @@ public class AlunoController {
     private AlunoService service;
 
     @PostMapping
-    public Aluno create(@RequestBody Aluno aluno) {
-        return service.save(aluno);
+    public AlunoDTO create(@RequestBody AlunoDTO alunoDTO) {
+        return service.save(alunoDTO);
     }
 
     @PutMapping
-    public Aluno update(@RequestBody Aluno aluno) {
-        return service.save(aluno);
+    public AlunoDTO update(@RequestBody AlunoDTO alunoDTO) {
+        return service.save(alunoDTO);
     }
 
     @GetMapping
-    public List<Aluno> findAll() {
+    public List<AlunoDTO> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Aluno findById(@PathVariable Long id) {
+    public AlunoDTO findById(@PathVariable Long id) {
         return service.findById(id);
     }
 

@@ -1,6 +1,6 @@
 package br.edu.christus.bibliotecapublicavirtual.controller;
 
-import br.edu.christus.bibliotecapublicavirtual.domain.model.Book;
+import br.edu.christus.bibliotecapublicavirtual.domain.dto.BookDTO;
 import br.edu.christus.bibliotecapublicavirtual.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +15,22 @@ public class BookController {
     private BookService service;
 
     @PostMapping
-    public Book create(@RequestBody Book book) {
-        return service.save(book);
+    public BookDTO create(@RequestBody BookDTO bookDTO) {
+        return service.save(bookDTO);
     }
     
     @PutMapping
-    public Book update(@RequestBody Book book) {
-        return service.save(book);
+    public BookDTO update(@RequestBody BookDTO bookDTO) {
+        return service.save(bookDTO);
     }
     
     @GetMapping
-    public List<Book> findAll() {
+    public List<BookDTO> findAll() {
         return service.findAll();
     }
     
     @GetMapping("/{isbn}")
-    public Book findByISBN(@PathVariable Long isbn) {
+    public BookDTO findByISBN(@PathVariable Long isbn) {
         return service.findByIsbn(isbn);
     }
     
