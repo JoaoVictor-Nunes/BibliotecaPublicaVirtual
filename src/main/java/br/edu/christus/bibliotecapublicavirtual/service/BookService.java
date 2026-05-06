@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,10 @@ public class BookService {
         if (bookDTO.getTitle().length() > 255) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Título não pode exceder 255 caracteres");
         }
-
+        if (bookDTO.getAnoLancamento() > Year.now().getValue()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Ano de lançamento não pode ser maior que o atual.");
+        }
         Optional<Book> existingByTitle = repository.findByTitle(bookDTO.getTitle());
         if (existingByTitle.isPresent() && (bookDTO.getIsbn() == null || !existingByTitle.get().getIsbn().equals(bookDTO.getIsbn()))) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este título já está sendo utilizado.");
