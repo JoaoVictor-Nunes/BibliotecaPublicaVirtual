@@ -7,5 +7,8 @@ import java.util.Optional;
 
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     boolean existsByEmail(String email);
+
+    boolean existsByEmailAndIdNot(String email, Long id);
+
     Optional<Aluno> findByEmail(String email);
 }
