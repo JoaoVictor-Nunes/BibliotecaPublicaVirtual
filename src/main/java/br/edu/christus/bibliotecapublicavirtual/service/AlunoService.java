@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+ import br.edu.christus.bibliotecapublicavirtual.domain.model.Serie;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,23 @@ public class AlunoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Nome não pode ter mais de 255 caracteres.");
         }
+        if (!alunoDTO.getSerie().equals(Serie.PRIMEIRO_ANO)
+                && !alunoDTO.getSerie().equals(Serie.SEGUNDO_ANO)
+                && !alunoDTO.getSerie().equals(Serie.TERCEIRO_ANO))  {
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                   "O aluno está no ensino médio (1o, 2o ou 3o serie).");
+       }
+        boolean EmailExists;
 
-        Optional<Aluno> existingByEmail = repository.findByEmail(alunoDTO.getEmail());
-        if (existingByEmail.isPresent() && (alunoDTO.getId() == null || !existingByEmail.get().getId().equals(alunoDTO.getId()))) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este email já está sendo utilizado.");
+        if (alunoDTO.getId() == null) {
+            EmailExists = repository.existsByEmail(alunoDTO.getEmail());
+        } else {
+            EmailExists = repository.existsByEmailAndIdNot(alunoDTO.getEmail(), alunoDTO.getId());
+        }
+
+        if (EmailExists) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Este e-mail já está sendo utilizado.");
         }
 
         Aluno alunoToSave = MapperUtil.parseObject(alunoDTO, Aluno.class);
