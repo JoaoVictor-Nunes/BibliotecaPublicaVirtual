@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import br.edu.christus.bibliotecapublicavirtual.domain.model.Serie;
+import br.edu.christus.bibliotecapublicavirtual.domain.model.Disciplina;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +25,35 @@ public class ProfessorService {
                     "Nome do professor não pode ter mais que 255 caracteres.");
         }
 
-        Optional<Professor> existingByEmail = repository.findByEmail(professorDTO.getEmail());
-        if (existingByEmail.isPresent() && (professorDTO.getId() == null || !existingByEmail.get().getId().equals(professorDTO.getId()))) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este email já está sendo utilizado.");
+        if (!professorDTO.getDisciplina().equals(Disciplina.MATEMATICA)
+                && !professorDTO.getDisciplina().equals(Disciplina.PORTUGUES)
+                && !professorDTO.getDisciplina().equals(Disciplina.EDUCACAO_FISICA)
+                && !professorDTO.getDisciplina().equals(Disciplina.HISTORIA)
+                && !professorDTO.getDisciplina().equals(Disciplina.GEOGRAFIA)
+                && !professorDTO.getDisciplina().equals(Disciplina.QUIMICA)
+                && !professorDTO.getDisciplina().equals(Disciplina.FISICA)
+                && !professorDTO.getDisciplina().equals(Disciplina.BIOLOGIA)
+                && !professorDTO.getDisciplina().equals(Disciplina.INGLES)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Disciplina inválida.");
+        }
+        if (!professorDTO.getSerie().equals(Serie.PRIMEIRO_ANO)
+                && !professorDTO.getSerie().equals(Serie.SEGUNDO_ANO)
+                && !professorDTO.getSerie().equals(Serie.TERCEIRO_ANO)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O professor da aula no ensino médio (1o, 2o ou 3o serie).");
+        }
+
+        boolean EmailExists;
+
+        if (professorDTO.getId() == null) {
+            EmailExists = repository.existsByEmail(professorDTO.getEmail());
+        } else {
+            EmailExists = repository.existsByEmailAndIdNot(professorDTO.getEmail(), professorDTO.getId());
+        }
+
+        if (EmailExists) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Este e-mail já está sendo utilizado.");
         }
 
         Professor professorToSave = MapperUtil.parseObject(professorDTO, Professor.class);
