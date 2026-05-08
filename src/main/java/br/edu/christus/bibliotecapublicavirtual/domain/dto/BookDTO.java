@@ -13,4 +13,5 @@ public class BookDTO {
     private String descricao;
     private int anoLancamento;
     private String genero;
+    private String pdfKey;
 }
