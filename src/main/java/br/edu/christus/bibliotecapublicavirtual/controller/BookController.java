@@ -3,7 +3,11 @@ package br.edu.christus.bibliotecapublicavirtual.controller;
 import br.edu.christus.bibliotecapublicavirtual.domain.dto.BookDTO;
 import br.edu.christus.bibliotecapublicavirtual.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,28 +18,45 @@ public class BookController {
     @Autowired
     private BookService service;
 
-    @PostMapping
-    public BookDTO create(@RequestBody BookDTO bookDTO) {
-        return service.save(bookDTO);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BookDTO> create(
+            @RequestPart("book") BookDTO bookDTO,
+            @RequestPart("file") MultipartFile file) {
+
+        BookDTO savedBook = service.save(bookDTO, file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
     }
-    
-    @PutMapping
-    public BookDTO update(@RequestBody BookDTO bookDTO) {
-        return service.save(bookDTO);
+
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BookDTO> update(
+            @RequestPart("book") BookDTO bookDTO,
+            @RequestPart("file") MultipartFile file) {
+
+        return ResponseEntity.ok(service.save(bookDTO, file));
     }
-    
+
     @GetMapping
-    public List<BookDTO> findAll() {
-        return service.findAll();
+    public ResponseEntity<List<BookDTO>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
-    
+
     @GetMapping("/{isbn}")
-    public BookDTO findByISBN(@PathVariable Long isbn) {
-        return service.findByIsbn(isbn);
+    public ResponseEntity<BookDTO> findByISBN(@PathVariable Long isbn) {
+        return ResponseEntity.ok(service.findByIsbn(isbn));
     }
-    
+
+    @GetMapping("/{isbn}/download")
+    public ResponseEntity<String> getDownloadUrl(@PathVariable Long isbn) {
+        BookDTO book = service.findByIsbn(isbn);
+
+        String url = service.getDownloadUrl(book.getPdfKey());
+
+        return ResponseEntity.ok(url);
+    }
+
     @DeleteMapping("/{isbn}")
-    void delete(@PathVariable Long isbn) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long isbn) {
         service.delete(isbn);
     }
 }

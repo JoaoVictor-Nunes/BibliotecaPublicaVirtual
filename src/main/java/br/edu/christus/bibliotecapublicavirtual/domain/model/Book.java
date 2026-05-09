@@ -27,4 +27,7 @@ public class Book {
     @Column(nullable = false)
     private int anoLancamento;
 
+    @Column(name = "pdf_key")
+    private String pdfKey;
+
 }
