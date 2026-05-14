@@ -109,6 +109,10 @@ public class BookService {
     }
 
     public void delete(Long isbn) {
+        var book = repository.findById(isbn);
+        if (book.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não existe livro com esse ISBN");
+        }
         repository.deleteById(isbn);
     }
 }

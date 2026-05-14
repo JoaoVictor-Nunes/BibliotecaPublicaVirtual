@@ -12,7 +12,6 @@ import br.edu.christus.bibliotecapublicavirtual.domain.model.Serie;
 import br.edu.christus.bibliotecapublicavirtual.domain.model.Disciplina;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProfessorService {
@@ -75,6 +74,11 @@ public class ProfessorService {
     }
 
     public void delete(Long id) {
+        var professor = repository.findById(id);
+        if (professor.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "O professor não existe.");
+        }
         repository.deleteById(id);
     }
 }

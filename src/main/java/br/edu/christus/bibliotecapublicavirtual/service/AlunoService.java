@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
- import br.edu.christus.bibliotecapublicavirtual.domain.model.Serie;
+import br.edu.christus.bibliotecapublicavirtual.domain.model.Serie;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AlunoService {
@@ -26,9 +25,9 @@ public class AlunoService {
         if (!alunoDTO.getSerie().equals(Serie.PRIMEIRO_ANO)
                 && !alunoDTO.getSerie().equals(Serie.SEGUNDO_ANO)
                 && !alunoDTO.getSerie().equals(Serie.TERCEIRO_ANO))  {
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                   "O aluno está no ensino médio (1o, 2o ou 3o serie).");
-       }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O aluno está no ensino médio (1o, 2o ou 3o serie).");
+        }
         boolean EmailExists;
 
         if (alunoDTO.getId() == null) {
@@ -61,6 +60,11 @@ public class AlunoService {
     }
 
     public void delete(Long id) {
+        var aluno = repository.findById(id);
+        if (aluno.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Esse aluno não existe.");
+        }
         repository.deleteById(id);
     }
 }

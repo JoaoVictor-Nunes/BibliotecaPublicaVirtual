@@ -24,7 +24,7 @@ public class EditoraController {
     @Operation(summary = "Cadastra uma nova editora", description = "Registra uma nova editora no sistema. Editoras são vinculadas a um ou mais livros.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Editora cadastrada com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = EditoraDTO.class))),
+                    content = @Content(mediaType = "application/json",schema = @Schema(implementation = EditoraDTO.class))),
             @ApiResponse(responseCode = "400", description = "Erro de validação ou dados incorretos", content = @Content)
     })
     @PostMapping

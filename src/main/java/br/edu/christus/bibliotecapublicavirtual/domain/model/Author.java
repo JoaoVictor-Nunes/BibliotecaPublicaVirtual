@@ -29,7 +29,11 @@ public class Author {
     @Column(nullable = false)
     private String biografia;
 
-    @ManyToMany
-    @JoinTable(name = "tb_autor_livro", joinColumns = @JoinColumn(name = "autor_id"), inverseJoinColumns = @JoinColumn(name = "livro_isbn"))
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "tb_autor_livro",
+            joinColumns = @JoinColumn(name = "autor_id"),
+            inverseJoinColumns = @JoinColumn(name = "livro_isbn")
+    )
     private List<Book> livros;
 }

@@ -30,7 +30,7 @@ public class Editora {
     @Column(nullable = false)
     private String endereco;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "editora_id")
     private List<Book> livros;
 }

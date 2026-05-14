@@ -33,6 +33,7 @@ public class BookController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BookDTO> create(
+            @io.swagger.v3.oas.annotations.Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart("book") BookDTO bookDTO,
             @RequestPart("file") MultipartFile file) {
 
@@ -49,6 +50,7 @@ public class BookController {
     })
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BookDTO> update(
+            @io.swagger.v3.oas.annotations.Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart("book") BookDTO bookDTO,
             @RequestPart("file") MultipartFile file) {
 

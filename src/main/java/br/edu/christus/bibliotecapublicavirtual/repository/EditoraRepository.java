@@ -8,7 +8,9 @@ public interface EditoraRepository extends
 
     boolean existsByEmail(String email);
 
-    boolean cnpjExists(String cnpj);
-
     boolean existsByEmailAndIdNot(String email, Long id);
+
+    boolean existsByCnpj(String cnpj);
+
+    boolean existsByCnpjAndIdNot(String cnpj, Long id);
 }
